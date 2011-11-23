@@ -7,6 +7,7 @@ After using sproutcore for a little while I discovered Statecharts and while I d
 * Substates
 * Concurrent substates
 * Initial substates
+* Pluggable states (load states in from other files)
 
 ## Coming features
 * Event handling
