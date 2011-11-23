@@ -24,7 +24,7 @@ define([
 
     registeredSubstates: [],
 
-    initalSubstate: false,
+    initialSubstate: false,
 
     // Keys of substates within this state
     subStates: [],
@@ -84,8 +84,8 @@ define([
       }
       this.isInitalized = true;
 
-      if (this.initalSubstate) {
-        this.initalSubstate = this.getSubstate(this.initalSubstate);
+      if (this.initialSubstate) {
+        this.initialSubstate = this.getSubstate(this.initialSubstate);
       }
     },
 

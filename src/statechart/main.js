@@ -199,12 +199,12 @@ define([
         var gotoStateAction = { state: state, current: false, action: ACTIONS.ENTER };
         stateActions.push(gotoStateAction);
 
-        var initalSubstate = state.initalSubstate;
+        var initialSubstate = state.initialSubstate;
 
         if (state.subStatesAreConcurrent) {
           this.traverseConcurrentEnterStates(state.getSubstates(), null, stateActions);
-        } else if (initalSubstate) {
-          this.traverseEnterStates(initalSubstate, null, null, stateActions);
+        } else if (initialSubstate) {
+          this.traverseEnterStates(initialSubstate, null, null, stateActions);
         } else {
           gotoStateAction.current = true;
         }
