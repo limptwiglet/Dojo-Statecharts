@@ -6,7 +6,11 @@
 		</style>
 		<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="isDebug:true"></script>
 		<script type="text/javascript">
-			require(['dojo', 'doh', './state/initial_substate.js'], function(dojo, doh){
+      require([
+          'dojo'
+          ,'doh'
+          ,'./state/state.js'
+        ], function(dojo, doh){
 				doh.runOnLoad();
 			});
     </script>

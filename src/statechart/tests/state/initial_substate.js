@@ -23,17 +23,18 @@ define('state/inital_substate', ['dojo', 'doh', 'statechart/main', 'statechart/s
         f: new State({})
       })
     })
-  });
+  }),
+
+
+  rootState = statechart.rootState,
+  stateA = statechart.rootState.a,
+  stateB = statechart.rootState.b,
+  stateC = statechart.rootState.a.c,
+  stateD = statechart.rootState.a.d,
+  stateE = statechart.rootState.b.e,
+  stateF = statechart.rootState.b.f;
 
   statechart.initStatechart();
-
-  rootState = statechart.rootState;
-  stateA = statechart.rootState.a;
-  stateB = statechart.rootState.b;
-  stateC = statechart.rootState.a.c;
-  stateD = statechart.rootState.a.d;
-  stateE = statechart.rootState.b.e;
-  stateF = statechart.rootState.b.f;
 
 
   doh.register('State: Test initial substate', [
