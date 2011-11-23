@@ -1,7 +1,8 @@
 define([
   'dojo/_base/declare'
   ,'dojo/_base/lang'
-], function (declare, lang) {
+  , 'dojo/_base/array'
+], function (declare, lang, arr) {
 
   var ACTIONS = {
     ENTER: 1,
@@ -130,7 +131,7 @@ define([
 
       for (var i = 0; i < chain1.length; i++) {
         var state = chain1[i];
-        if (chain2.indexOf(state) >= 0) pivot = chain1[i];
+        if (arr.indexOf(chain2, state) >= 0) pivot = chain1[i];
       }
 
       return pivot;
@@ -155,12 +156,12 @@ define([
 
 
     _exitState: function (state, context) {
-      if (state.currentSubStates.indexOf(state) >= 0) {
+      if (arr.indexOf(state.currentSubStates, state) >= 0) {
         var parentState = state.parent,
             subStates = parentState.currentSubStates;
 
         while (parentState) {
-          subStates.splice(subStates.indexOf(state), 1);
+          subStates.splice(arr.indexOf(subStates, state), 1);
           parentState = parentState.parent;
         }
       }

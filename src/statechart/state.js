@@ -1,7 +1,8 @@
 define([
   'dojo/_base/declare'
   ,'dojo/_base/lang'
-], function (declare, lang) {
+  ,'dojo/_base/array'
+], function (declare, lang, arr) {
   var State = declare('', null, {
     isState: true,
 
@@ -100,7 +101,7 @@ define([
     },
 
     registerSubstate: function (state) {
-      if (this.registeredSubstates.indexOf(state) > -1) return;
+      if (arr.indexOf(this.registeredSubstates, state) > -1) return;
       this.registeredSubstates.push(state);
     },
 
@@ -121,7 +122,7 @@ define([
       }
 
       if (lang.isObject(state)) {
-        return this.registeredSubstates.indexOf(state) > -1 ? state : null;
+        return arr.indexOf(this.registeredSubstates, state) > -1 ? state : null;
       }
 
       if (lang.isString(state)) {
