@@ -125,6 +125,15 @@ define([
     },
 
     findPivotState: function(chain1, chain2) {
+      // summary:
+      //    Locates the point in a statechain where states should be exited to
+      //    and also entered to
+      // chain1: Array
+      //    An array containing states
+      // chain2: Array
+      //    An array containing states
+      // returns:
+      //    Returns the state which marks the pivot point
       if (chain1.length === 0 || chain2.length === 0) return null;
 
       var pivot;
@@ -138,6 +147,16 @@ define([
     },
 
     _enterState: function (state, current, context) {
+      // summary:
+      //    Adds the state to its parent states currentSubstate array and sets
+      //    the states isCurrentState property to true and finally calls the
+      //    states own enterState method
+      // state: Object
+      //    The state to enter
+      // current: Boolean
+      //    If the state is to be marked current
+      // context: Object
+      //    A context object containing values to pass to the states enterState
       var parentState = state.parent;
 
       if (current) {
@@ -156,6 +175,14 @@ define([
 
 
     _exitState: function (state, context) {
+      // summary:
+      //    Removes the state from its parents currentSubstates array and
+      //    sets the states isCurrentState property to false and finally calls
+      //    the states own exitState method
+      // state: Object
+      //    The state to exit
+      // context: Object
+      //    A context object containing values to pass to the states exitState
       if (arr.indexOf(state.currentSubStates, state) >= 0) {
         var parentState = state.parent,
             subStates = parentState.currentSubStates;
@@ -171,10 +198,25 @@ define([
 
 
     getState: function (state) {
+      // summary:
+      //    Gets a state from the rootstate of the state chart can use .
+      //    seperation to get substates ie getState('a.b')
+      // returns:
+      //    Returns the substate
       return this.rootState.getSubstate(state);
     },
 
+
     createStateChain: function (state) {
+      // summary:
+      //    Walks up through the passed in state getting its parent states
+      //
+      // state: Object
+      //    The state that should be walked
+      //
+      // returns:
+      //    An array of this states chain
+
       var chain = new Array(), chain2 = {};
 
       while (state) {
@@ -185,7 +227,23 @@ define([
       return chain;
     },
 
+
     traverseEnterStates: function (state, statePath, pivot, stateActions) {
+      // summary:
+      //    Walks a statechain entering states and ensuring any concurrent sub states
+      //    are entered as well
+      //
+      // state: Object
+      //    State objec to go to
+      //
+      // statePath: Array
+      //    The state chain that should be followed
+      //
+      // pivot: Object
+      //    The pivot point at which states should be entered from
+      //
+      // stateActions: Array
+      //    An array of state actions to be carried out
 
       if (pivot) {
         if (state !== pivot) {
@@ -221,6 +279,14 @@ define([
     },
 
     traverseConcurrentEnterStates: function (states, exclude, stateActions) {
+      // summary:
+      //    Walks through a states sub states entering them
+      // states: Array
+      //    An array of states to enter
+      // exlude:
+      //    Not current used
+      // stateActions:
+      //    State actions to run
       var i = 0,
       l = states.length,
       state;
@@ -249,6 +315,25 @@ define([
       stateActions.push({ action: ACTIONS.EXIT, state: state });
       if (state.isCurrentState) state._exit_skipState = true;
       this.traverseExitStates(statePath.shift(), statePath, stopState, stateActions);
+    },
+
+
+    sendEvent: function (event, context) {
+      var curStates = this.rootState.currentSubStates.slice(),
+          handled = false,
+          state = null,
+          l = curStates.length,
+          i = 0;
+
+      for (; i < l; i++) {
+        state = curStates[i];
+
+        while (!handled && state) {
+          handled = state.handleEvent(event, context);
+
+          if (!handled) state = state.parent;
+        }
+      }
     }
 
   });

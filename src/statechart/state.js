@@ -147,7 +147,16 @@ define([
 
     // Stub functions for overwritting
     enterState: function () {},
-    exitState: function () {}
+    exitState: function () {},
+
+    handleEvent: function (event, context) {
+      var fn = lang.getObject(event, false, this);
+      if (fn && lang.isFunction(fn))  {
+        return this[event](context);
+
+      }
+      return false;
+    }
   });
 
   return State;
