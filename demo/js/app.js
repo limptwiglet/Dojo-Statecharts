@@ -1,82 +1,63 @@
-require(['statechart/main', 'statechart/state'], function (Statechart, State) {
+require(['dojo', 'statechart/main', 'statechart/state'], function (dojo, Statechart, State) {
   stateChart = new Statechart({
     rootState: new State({
-      name: 'rootState',
-      subStates: ['stateA', 'stateB', 'stateC', 'stateD'],
+      subStates: ['a', 'b'],
 
-      enterState: function () {
-        console.log('entered root state');
+      enterState: function() {
+        console.log('enter root state');
       },
 
-      exitState: function () {
+      exitState: function() {
         console.log('exit root state');
       },
 
-      stateA: 'js/statea.js',
-
-      stateB: new State({
-        subStatesAreConcurrent: true,
-        subStates: ['stateB1', 'stateB2'],
-        name: 'stateB',
-
-        enterState: function (context) {
-          console.log('enter stateB', context);
+      a: new State({
+        enterState: function () {
+          console.log('enter state a');
+          this.gotoState('b');
         },
 
         exitState: function() {
-          console.log('exit stateB');
-        },
-
-        stateB1: new State({
-          name: 'stateB1',
-          enterState: function (context) {
-            console.log('enter stateB1', context);
-          },
-          exitState: function() {
-            console.log('exit stateB1');
-          }
-        }),
-
-        stateB2: new State({
-          name: 'stateB2',
-          enterState: function () {
-            console.log('enter stateB2');
-
-            var self = this;
-            setTimeout(function() {
-              self.gotoState('stateC.stateC1');
-            }, 1000)
-          },
-          exitState: function() {
-            console.log('exit stateB2');
-          }
-        })
-
+          console.log('exit state a');
+        }
       }),
 
-      stateC: new State({
-        subStates: ['stateC1'],
-
+      b: new State({
         enterState: function () {
-          console.log('enter stateC');
+          console.log('enter state b');
         },
 
-        exitState: function () {
-          console.log('exit stateC');
-        },
-
-        stateC1: new State({
-          enterState: function () {
-            console.log('enter stateC1');
-            this.gotoState('stateD');
-          }
-        })
-      }),
-
-      stateD: 'js/stated.js'
+        exitState: function() {
+          console.log('exit state b');
+        }
+      })
     })
   });
 
 
   stateChart.initStatechart();
+
+  console.log(dojo);
+  dojo.ready(function () {
+    var stateA = dojo.create('a', {
+      href: '#',
+      innerHTML: 'Goto state A'
+    }, document.body),
+
+    stateB = dojo.create('a', {
+      href: '#',
+      innerHTML: 'Goto state B'
+    }, document.body);
+
+    dojo.connect(stateA, 'onclick', function (evt) {
+      dojo.stopEvent(evt);
+      stateChart.gotoState('a', stateChart.rootState);
+    });
+
+    dojo.connect(stateB, 'onclick', function (evt) {
+      dojo.stopEvent(evt);
+      console.log(stateChart.rootState.currentSubStates);
+      stateChart.gotoState('b', stateChart.rootState.a);
+    });
+  });
 });

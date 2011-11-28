@@ -136,11 +136,11 @@ define([
       //    Returns the state which marks the pivot point
       if (chain1.length === 0 || chain2.length === 0) return null;
 
-      var pivot;
+      var pivot = null;
 
       for (var i = 0; i < chain1.length; i++) {
         var state = chain1[i];
-        if (arr.indexOf(chain2, state) >= 0) pivot = chain1[i];
+        if (pivot === null && arr.indexOf(chain2, state) >= 0) pivot = chain1[i];
       }
 
       return pivot;

@@ -13,13 +13,23 @@ define('state/namespacing', ['dojo', 'doh', 'statechart/main', 'statechart/state
 
       b: new State({})
     })
-  }),
+  });
 
-  rootState = statechart.rootState,
-  stateA = rootState.a,
-  stateB = rootState.b,
-  stateC = stateA.c,
-  stateD = stateA.d;
+
+  var statechart2 = new Statechart({
+    rootState: new State({
+      subStates: ['a', 'b'],
+
+      a: new State({
+        subStates: ['d', 'e'],
+        subStatesAreConcurrent: true,
+
+        d: new State({}),
+        e: new State({})
+      })
+    })
+  })
+
 
 
   statechart.initStatechart();
@@ -32,8 +42,7 @@ define('state/namespacing', ['dojo', 'doh', 'statechart/main', 'statechart/state
         statechart.gotoState('a');
       },
       runTest: function (t) {
-        t.assertTrue(stateA.isCurrentState);
-        t.assertFalse(stateC.isCurrentState);
+        t.assertTrue(statechart.rootState.a.isCurrentState);
       }
     },
 
@@ -43,8 +52,17 @@ define('state/namespacing', ['dojo', 'doh', 'statechart/main', 'statechart/state
         statechart.gotoState('a.c');
       },
       runTest: function (t) {
-        t.assertTrue(stateA.isCurrentState);
-        t.assertTrue(stateC.isCurrentState);
+        t.assertTrue(statechart.rootState.a.isCurrentState);
+        t.assertTrue(statechart.rootState.a.c.isCurrentState);
+      }
+    },
+
+    {
+      name: 'Test statechart2 concurrent substates',
+      setUp: function () {
+        statechart2.gotoState('a.e');
+      },
+      runTest: function (t) {
       }
     }
   ]);
