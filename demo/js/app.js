@@ -5,6 +5,7 @@ require(['dojo', 'statechart/main', 'statechart/state'], function (dojo, Statech
 
       enterState: function() {
         console.log('enter root state');
+        this.gotoState('a');
       },
 
       exitState: function() {
@@ -12,14 +13,35 @@ require(['dojo', 'statechart/main', 'statechart/state'], function (dojo, Statech
       },
 
       a: new State({
+        subStates: ['c', 'd'],
         enterState: function () {
           console.log('enter state a');
-          this.gotoState('b');
+          this.gotoState('a.c');
         },
 
         exitState: function() {
           console.log('exit state a');
-        }
+        },
+
+        c: new State({
+          enterState: function () {
+            console.log('enter state c');
+          },
+
+          exitState: function () {
+            console.log('exit state c');
+          }
+        }),
+
+        d: new State({
+          enterState: function () {
+            console.log('enter state d');
+          },
+
+          exitState: function () {
+            console.log('exit state d');
+          }
+        })
       }),
 
       b: new State({
@@ -37,27 +59,8 @@ require(['dojo', 'statechart/main', 'statechart/state'], function (dojo, Statech
 
   stateChart.initStatechart();
 
-  console.log(dojo);
-  dojo.ready(function () {
-    var stateA = dojo.create('a', {
-      href: '#',
-      innerHTML: 'Goto state A'
-    }, document.body),
+  setTimeout(function () {
+    stateChart.gotoStateFromSibling('a.d', 'a');
+  }, 250);
 
-    stateB = dojo.create('a', {
-      href: '#',
-      innerHTML: 'Goto state B'
-    }, document.body);
-
-    dojo.connect(stateA, 'onclick', function (evt) {
-      dojo.stopEvent(evt);
-      stateChart.gotoState('a', stateChart.rootState);
-    });
-
-    dojo.connect(stateB, 'onclick', function (evt) {
-      dojo.stopEvent(evt);
-      console.log(stateChart.rootState.currentSubStates);
-      stateChart.gotoState('b', stateChart.rootState.a);
-    });
-  });
 });

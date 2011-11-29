@@ -94,6 +94,36 @@ define([
       this.executeActions(state, stateActions, context);
     },
 
+
+    gotoStateFromSibling: function (destState, commonState, defaultState) {
+      // summary:
+      //    Moves to another state without knowing the from state
+      // destState:
+      //    The destination state to move to
+      // commonState:
+      //    A common parent state that the destination state has with any
+      //    potential current state
+      //
+      // TODO: Need to handle getting and comparing states better
+      var ds = this.rootState.getSubstate(destState),
+          cs = this.rootState.getSubstate(commonState);
+
+      var subStates = this.rootState.currentSubStates,
+          subState = null,
+          l = subStates.length,
+          i = 0;
+
+      for (; i < l; i++) {
+        subState = subStates[i];
+
+        if (subState.parent === cs && ds !== subState) {
+          console.log(destState, subState);
+          this.gotoState(destState, subState);
+          i = l;
+        }
+      }
+    },
+
     executeActions: function (gotoState, actions, context) {
       var i = 0, l = actions.length, action;
 
@@ -192,6 +222,7 @@ define([
           parentState = parentState.parent;
         }
       }
+      state._exit_skipState = false;
       state.isCurrentState = false;
       state.exitState(context);
     },
