@@ -222,6 +222,18 @@ define([
           parentState = parentState.parent;
         }
       }
+
+      var parentState = state.parent;
+      while (parentState) {
+        var subStates = parentState.currentSubStates;
+        var index = arr.indexOf(subStates, state);
+
+        if (index >= 0) {
+          subStates.splice(index, 1);
+        }
+        parentState = parentState.parent;
+      }
+
       state._exit_skipState = false;
       state.isCurrentState = false;
       state.exitState(context);
