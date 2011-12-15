@@ -1,8 +1,9 @@
 define([
-  'dojo/_base/declare'
-  ,'dojo/_base/lang'
-  , 'dojo/_base/array'
-], function (declare, lang, arr) {
+  'dojo/_base/declare',
+  'dojo/_base/lang',
+  'dojo/_base/array',
+  'dojo/_base/Deferred'
+], function (declare, lang, arr, Deferred) {
 
   var ACTIONS = {
     ENTER: 1,
@@ -36,14 +37,17 @@ define([
     },
 
     initStatechart: function () {
-      this.transitionLocked = false;
+      var def = new Deferred();
 
+      this.transitionLocked = false;
       this.rootState.isRootState = true;
       this.rootState.statechart = this;
 
-      this.rootState.initState();
+      this.rootState.initState(def);
 
       this.gotoState(this.rootState);
+
+      return def;
     },
 
 
@@ -108,16 +112,17 @@ define([
       var ds = this.rootState.getSubstate(destState),
           cs = this.rootState.getSubstate(commonState);
 
+
       var subStates = this.rootState.currentSubStates,
           subState = null,
           l = subStates.length,
           i = 0;
 
+
       for (; i < l; i++) {
         subState = subStates[i];
 
         if (subState.parent === cs && ds !== subState) {
-          console.log(destState, subState);
           this.gotoState(destState, subState);
           i = l;
         }

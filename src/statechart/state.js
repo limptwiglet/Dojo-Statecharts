@@ -37,7 +37,7 @@ define([
       lang.mixin(this, props);
     },
 
-    initState: function () {
+    initState: function (deferred) {
       if (this.isInitalized) {
         return;
       }
@@ -86,6 +86,10 @@ define([
 
       if (this.initialSubstate) {
         this.initialSubstate = this.getSubstate(this.initialSubstate);
+      }
+
+      if (deferred) {
+        deferred.callback();
       }
     },
 
